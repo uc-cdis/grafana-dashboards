@@ -1,0 +1,2921 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 22,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 7,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [
+                {
+                  "options": {
+                    "pattern": "None(.*)None",
+                    "result": {
+                      "index": 0,
+                      "text": "$1"
+                    }
+                  },
+                  "type": "regex"
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 21,
+            "x": 0,
+            "y": 1
+          },
+          "id": 39,
+          "options": {
+            "displayMode": "gradient",
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prom"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"False\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"False\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"False\"} @ start() or vector(0)\n)",
+              "format": "time_series",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "Non DRS",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prom"
+              },
+              "editorMode": "code",
+              "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"True\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"True\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"True\"} @ start() or vector(0)\n)",
+              "hide": false,
+              "instant": false,
+              "legendFormat": "DRS",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "Total Downloads",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 7,
+            "x": 0,
+            "y": 9
+          },
+          "id": 8,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "last"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "value",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prom"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_presigned_url_total{hostname=~\"$hostname\"} @ start() or vector(0)\n)",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Downloads",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 100,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 7,
+            "x": 7,
+            "y": 9
+          },
+          "id": 18,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prom"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_presigned_url_total{hostname=~\"$hostname\"} @ start() or vector(0)\n)",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Downloads",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 7,
+            "x": 14,
+            "y": 9
+          },
+          "id": 9,
+          "options": {
+            "displayMode": "gradient",
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prom"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_presigned_url_total{hostname=~\"$hostname\"} @ start() or vector(0)\n)",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Downloads",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 7,
+            "x": 0,
+            "y": 17
+          },
+          "id": 10,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "last"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "value",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prom"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"False\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"False\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"False\"} @ start() or vector(0)\n)",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Non DRS Data Access Requests",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 100,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineStyle": {
+                  "fill": "solid"
+                },
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 7,
+            "x": 7,
+            "y": 17
+          },
+          "id": 11,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prom"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"False\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"False\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"False\"} @ start() or vector(0)\n)",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Non DRS Data Access Requests",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 7,
+            "x": 14,
+            "y": 17
+          },
+          "id": 22,
+          "options": {
+            "displayMode": "gradient",
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prom"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"False\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"False\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"False\"} @ start() or vector(0)\n)",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Non DRS Data Access Requests",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 7,
+            "x": 0,
+            "y": 25
+          },
+          "id": 12,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "last"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prom"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"True\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"True\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"True\"} @ start() or vector(0)\n)",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "DRS Data Access Requests",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 100,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 7,
+            "x": 7,
+            "y": 25
+          },
+          "id": 13,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.1.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prom"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"True\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"True\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"True\"} @ start() or vector(0)\n)",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "DRS Data Access Requests",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 7,
+            "x": 14,
+            "y": 25
+          },
+          "id": 23,
+          "options": {
+            "displayMode": "gradient",
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "11.2.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prom"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"True\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"True\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_presigned_url_total{hostname=~\"$hostname\", drs=\"True\"} @ start() or vector(0)\n)",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "DRS Data Access Requests",
+          "type": "bargauge"
+        }
+      ],
+      "title": "Downloads and Requests",
+      "type": "row"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "id": 5,
+      "panels": [],
+      "title": "Logins",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "pattern": "None(.*)None",
+                "result": {
+                  "index": 0,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 21,
+        "x": 0,
+        "y": 2
+      },
+      "id": 38,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{idp=\"ras\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{idp=\"ras\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{idp=\"ras\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "RAS",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{idp=\"google\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{idp=\"google\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{idp=\"google\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Google",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{fence_idp=\"orcid\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{fence_idp=\"orcid\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{fence_idp=\"orcid\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Orcid",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{shib_idp=\"urn:mace:incommon:uchicago.edu\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{shib_idp=\"urn:mace:incommon:uchicago.edu\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{shib_idp=\"urn:mace:incommon:uchicago.edu\", hostname=\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "UChicago InCommon",
+          "range": true,
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{fence_idp=\"shibboleth\", shib_idp=\"https://auth.nih.gov/IDP\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{fence_idp=\"shibboleth\", shib_idp=\"https://auth.nih.gov/IDP\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{fence_idp=\"shibboleth\", shib_idp=\"https://auth.nih.gov/IDP\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "NIH",
+          "range": true,
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{shib_idp=\"https://aaf.unsw.edu.au/idp/shibboleth\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{shib_idp=\"https://aaf.unsw.edu.au/idp/shibboleth\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{shib_idp=\"https://aaf.unsw.edu.au/idp/shibboleth\", hostname=\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "UNSW",
+          "range": true,
+          "refId": "F"
+        }
+      ],
+      "title": "Total Logins",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 0,
+        "y": 10
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{idp=\"all\", hostname=~\"$cluster|$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{idp=\"all\", hostname=~\"$cluster|$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{idp=\"all\", hostname=~\"$cluster|$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Total Logins",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": true,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 7,
+        "y": 10
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{idp=\"all\", hostname=~\"$cluster|$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{idp=\"all\", hostname=~\"$cluster|$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{idp=\"all\", hostname=~\"$cluster|$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Total Logins",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 14,
+        "y": 10
+      },
+      "id": 27,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{idp=\"all\", hostname=~\"$cluster|$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{idp=\"all\", hostname=~\"$cluster|$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{idp=\"all\", hostname=~\"$cluster|$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Total Logins",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 0,
+        "y": 18
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{idp=\"google\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{idp=\"google\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{idp=\"google\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Google Logins",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 7,
+        "y": 18
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{idp=\"google\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{idp=\"google\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{idp=\"google\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Google Logins",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 14,
+        "y": 18
+      },
+      "id": 21,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{idp=\"google\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{idp=\"google\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{idp=\"google\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Google Logins",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 0,
+        "y": 26
+      },
+      "id": 15,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{fence_idp=\"orcid\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{fence_idp=\"orcid\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{fence_idp=\"orcid\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Orcid Logins",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 96,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 7,
+        "y": 26
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{fence_idp=\"orcid\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{fence_idp=\"orcid\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{fence_idp=\"orcid\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Orcid Logins",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 14,
+        "y": 26
+      },
+      "id": 30,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{fence_idp=\"orcid\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{fence_idp=\"orcid\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{fence_idp=\"orcid\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Orcid Logins",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 0,
+        "y": 34
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "max"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{shib_idp=\"urn:mace:incommon:uchicago.edu\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{shib_idp=\"urn:mace:incommon:uchicago.edu\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{shib_idp=\"urn:mace:incommon:uchicago.edu\", hostname=\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "UChicago InCommon Logins",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 7,
+        "y": 34
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{shib_idp=\"urn:mace:incommon:uchicago.edu\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{shib_idp=\"urn:mace:incommon:uchicago.edu\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{shib_idp=\"urn:mace:incommon:uchicago.edu\", hostname=\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "UChicago InCommon Logins",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 14,
+        "y": 34
+      },
+      "id": 25,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{shib_idp=\"urn:mace:incommon:uchicago.edu\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{shib_idp=\"urn:mace:incommon:uchicago.edu\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{shib_idp=\"urn:mace:incommon:uchicago.edu\", hostname=\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "UChicago InCommon Logins",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 0,
+        "y": 42
+      },
+      "id": 26,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{fence_idp=\"shibboleth\", shib_idp=\"https://auth.nih.gov/IDP\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{fence_idp=\"shibboleth\", shib_idp=\"https://auth.nih.gov/IDP\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{fence_idp=\"shibboleth\", shib_idp=\"https://auth.nih.gov/IDP\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "NIH Logins",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 7,
+        "y": 42
+      },
+      "id": 28,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{fence_idp=\"shibboleth\", shib_idp=\"https://auth.nih.gov/IDP\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{fence_idp=\"shibboleth\", shib_idp=\"https://auth.nih.gov/IDP\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{fence_idp=\"shibboleth\", shib_idp=\"https://auth.nih.gov/IDP\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "NIH Logins",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 14,
+        "y": 42
+      },
+      "id": 29,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{fence_idp=\"shibboleth\", shib_idp=\"https://auth.nih.gov/IDP\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{fence_idp=\"shibboleth\", shib_idp=\"https://auth.nih.gov/IDP\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{fence_idp=\"shibboleth\", shib_idp=\"https://auth.nih.gov/IDP\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "NIH Logins",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 0,
+        "y": 50
+      },
+      "id": 33,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{idp=\"ras\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{idp=\"ras\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{idp=\"ras\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "RAS Logins",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 7,
+        "y": 50
+      },
+      "id": 32,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{idp=\"ras\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{idp=\"ras\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{idp=\"ras\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "RAS Logins",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 14,
+        "y": 50
+      },
+      "id": 36,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{idp=\"ras\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{idp=\"ras\", hostname=~\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{idp=\"ras\", hostname=~\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "RAS Logins",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 0,
+        "y": 58
+      },
+      "id": 35,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{shib_idp=\"https://aaf.unsw.edu.au/idp/shibboleth\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{shib_idp=\"https://aaf.unsw.edu.au/idp/shibboleth\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{shib_idp=\"https://aaf.unsw.edu.au/idp/shibboleth\", hostname=\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "UNSW Logins",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 7,
+        "y": 58
+      },
+      "id": 37,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{shib_idp=\"https://aaf.unsw.edu.au/idp/shibboleth\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{shib_idp=\"https://aaf.unsw.edu.au/idp/shibboleth\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{shib_idp=\"https://aaf.unsw.edu.au/idp/shibboleth\", hostname=\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "UNSW Logins",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": true,
+        "type": "prometheus",
+        "uid": "prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 14,
+        "y": 58
+      },
+      "id": 31,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prom"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(\n    # Calculates the difference between the last measurement \n    # and the first measurement in the given time_range for each \n    # timeseries, this helps identify how much additional resources\n    # were consumed in the given time_range\n    increase(\n        gen3_fence_login_total{shib_idp=\"https://aaf.unsw.edu.au/idp/shibboleth\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n    # Adds to the difference the minimum value of each timeseries, \n    # this helps to account for the timeseries that started within \n    # the given time_range with the first measurement greater than 0\n    # (not considered by the previous increase function)\n    + min_over_time(\n        gen3_fence_login_total{shib_idp=\"https://aaf.unsw.edu.au/idp/shibboleth\", hostname=\"$hostname\", container=\"fence\"}[$__range]\n    )\n)\n# Removes the timeseries measurements being carried over from before \n# the start of the time_range, this offsets the running timeseries\n# as if they had started from zero within the time_range\n- sum(\n    gen3_fence_login_total{shib_idp=\"https://aaf.unsw.edu.au/idp/shibboleth\", hostname=\"$hostname\", container=\"fence\"} @ start() or vector(0)\n)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "UNSW Logins",
+      "type": "bargauge"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": false,
+          "text": "data.midrc.org",
+          "value": "data.midrc.org"
+        },
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "hostname",
+        "options": [],
+        "query": {
+          "label": "hostname",
+          "refId": "LokiVariableQueryEditor-VariableQuery",
+          "stream": "{app=\"fence\"}",
+          "type": 1
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-2d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Downloads, Requests, and Logins",
+  "uid": "cdt84wuegnklcb",
+  "version": 144,
+  "weekStart": ""
+}
